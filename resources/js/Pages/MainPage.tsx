@@ -4,6 +4,7 @@ import FiltersSection from "@/Pages/components/FiltersSection";
 import Pagination from "@/Pages/components/Pagination";
 import {useEffect, useState} from "react";
 import {useFilters, useItems} from "@/Hooks/useFilters";
+import Header from "@/Layouts/Header";
 
 export default function MainPage({ auth }: { auth: any }) {
 
@@ -31,37 +32,7 @@ export default function MainPage({ auth }: { auth: any }) {
     }, [filters]);
 
     return (
-        <div className={"container"}>
-            <header className="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
-                <div className="flex lg:col-start-2 lg:justify-center">
-                    <h1 className="text-3xl font-bold">Welcome In Arc App </h1>
-                </div>
-                <nav className="-mx-3 flex flex-1 justify-end">
-                    {auth.user ? (
-                        <Link
-                            href={route('dashboard')}
-                            className="btn btn-primary"
-                        >
-                            Dashboard
-                        </Link>
-                    ) : (
-                        <>
-                            <Link
-                                href={route('login')}
-                                className="btn btn-primary"
-                            >
-                                Log in
-                            </Link>
-                            <Link
-                                href={route('register')}
-                                className="btn btn-secondary"
-                            >
-                                Register
-                            </Link>
-                        </>
-                    )}
-                </nav>
-            </header>
+        <Header>
             <Container>
                 <h2 className='text-center mb-5'>Items List</h2>
 
@@ -77,16 +48,15 @@ export default function MainPage({ auth }: { auth: any }) {
                 >
                     {items.map(item => {
                         return (
-                            <div className="text-center border">
+                            <Link href={`/items/${item.id}`} className="text-center border item-box">
                                 <img src={item.icon} alt={item.item_name}  style={{ maxHeight: "100px" }} className='mx-auto'/>
                                 <h5>{item.item_name}</h5>
                                 <h6 className='rarity-box' style={{backgroundColor: item.rarity?.color}}>{item.rarity?.rarity_name}</h6>
-                                <p className={'d-flex align-items-center justify-content-center'}>{item.price}<img src="images/Icon_Cred.webp" alt="Icon_Cred" style={{ maxHeight: "20px" }} className='ml-1'/></p>
-                            </div>
+                                <p className={'d-flex align-items-center justify-content-center'}>{item.price}<img src="images/currency_symbol.webp" alt="Currency Symbol" style={{ maxHeight: "20px" }} className='ml-1'/></p>
+                            </Link>
                         )
                     })}
                 </div>
-
 
                 <div className="d-flex justify-content-center mt-4">
                     <Pagination
@@ -96,5 +66,6 @@ export default function MainPage({ auth }: { auth: any }) {
                     />
                 </div>
             </Container>
-</div>);
+        </Header>
+    );
 }

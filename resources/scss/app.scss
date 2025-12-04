@@ -1,5 +1,4 @@
 @use "./variables" as *;
-@import "bootstrap";
 
 body {
     background-color: $background-color !important;
@@ -22,4 +21,15 @@ body {
     padding: 5px 10px;
     color: white;
     border-radius: $border-radius;
+}
+.item-box {
+    text-decoration: none;
+    border-radius: $border-radius;
+    color: #1a202c;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        -webkit-box-shadow: 5px 5px 20px -6px rgba(66, 68, 90, 1);
+        -moz-box-shadow: 5px 5px 20px -6px rgba(66, 68, 90, 1);
+        box-shadow: 5px 5px 20px -6px rgba(66, 68, 90, 1);
+    }
 }

@@ -1,11 +1,15 @@
-import AuthenticatedLayout from '../Layouts/AuthenticatedLayout';
+import Header from '../Layouts/Header';
 import Container from './components/Container';
 import {useEffect, useState} from "react";
 import FiltersSection from "../Pages/components/FiltersSection";
 import Pagination from "../Pages/components/Pagination";
 import { useFilters, useItems } from "@/Hooks/useFilters";
+import ViewButton from "@/Components/Buttons/ViewButton";
+import EditButton from "@/Components/Buttons/EditButton";
+import DeleteButton from "@/Components/Buttons/DeleteButton";
+import {route} from "ziggy-js";
 
-export default function Dashboard() {
+export default function ItemsList() {
     const { allRarity, allFoundIn, allItemTypes} = useFilters();
     const [filters, setFilters] = useState({
         rarity: '',
@@ -30,7 +34,7 @@ export default function Dashboard() {
     }, [filters]);
 
     return (
-        <AuthenticatedLayout header={undefined}>
+        <Header header={undefined}>
             <Container>
                 <h2 className='text-center mb-5'>Items List</h2>
 
@@ -76,14 +80,16 @@ export default function Dashboard() {
                             <td className="align-middle">
                                 <span className="d-flex align-items-center">
                                     {item.price}
-                                    <img src="images/Icon_Cred.webp" alt="Icon_Cred" style={{ maxHeight: "20px" }} className='ml-1'/>
+                                    <img src="images/currency_symbol.webp" alt="Currency Symbol" style={{ maxHeight: "20px" }} className='ml-1'/>
                                 </span>
                             </td>
                             <td className="align-middle">
                                 <div className="d-flex flex-column">
-                                    <button className='btn btn-sm btn-primary mb-2'>View</button>
-                                    <button className='btn btn-sm btn-success mb-2'>Edit</button>
-                                    <button className='btn btn-sm btn-danger'>Delete</button>
+                                    <ViewButton url={route('item.single', { id: item.id })} />
+                                    <EditButton url={route('item.edit', { id: item.id })} />
+                                    <DeleteButton
+                                        url={route('item.delete', { id: item.id })}
+                                        onDeleted={() => fetchItems(1, filters)} />
                                 </div>
                             </td>
                         </tr>
@@ -99,6 +105,6 @@ export default function Dashboard() {
                     />
                 </div>
             </Container>
-        </AuthenticatedLayout>
+        </Header>
     );
 }

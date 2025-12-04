@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Repository\EloquentItemReadRepository;
+use App\Repository\EloquentItemWriteRepository;
 use App\Repository\ItemReadRepository;
+use App\Repository\ItemWriteRepository;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 
@@ -11,6 +13,7 @@ class AppServiceProvider extends ServiceProvider
 {
     public $singletons = [
         ItemReadRepository::class => EloquentItemReadRepository::class,
+        ItemWriteRepository::class => EloquentItemWriteRepository::class,
     ];
 
 

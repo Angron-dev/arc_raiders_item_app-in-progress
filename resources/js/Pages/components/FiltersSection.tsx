@@ -73,7 +73,7 @@ export default function FiltersSection({
             {selectFilters.map(filter => (
                 <SelectInput
                     key={filter.name}
-                    className="me-3"
+                    className="me-3 w-25"
                     name={filter.name}
                     optionPlaceholder={filter.placeholder}
                     options={toOptions(filter.list, "id", filter.label)}

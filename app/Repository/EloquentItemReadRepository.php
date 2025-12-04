@@ -29,12 +29,8 @@ class EloquentItemReadRepository implements ItemReadRepository
     {
         return Item::where('type', 'Weapon')->get()->paginate($perPage);
     }
-    public function getItemByRarity(string $rarityId, int $perPage = self::PER_PAGE): LengthAwarePaginator
+    public function getItemById(int $id): Item
     {
-        return Item::where('rarity_id', $rarityId)->get()->paginate($perPage);
-    }
-    public function getItemByFoundIn(string $foundId, int $perPage = self::PER_PAGE): LengthAwarePaginator
-    {
-        return Item::where('found_in_id', $foundId)->get()->paginate($perPage);
+        return Item::with('rarity', 'foundIn', 'itemType')->find($id);
     }
 }

@@ -19,7 +19,7 @@ function SelectInput({ className, options, value, onValueChange = null, optionPl
     };
 
     return (
-        <div className={`input-group mb-3 w-25 ${className ?? ""}`}>
+        <div className={`input-group mb-3 ${className ?? ""}`}>
             <label htmlFor={props.id ?? props.name} className='text-body-tertiary mb-2 mx-auto'>
                 {optionPlaceholder}
             </label>

@@ -1,8 +1,6 @@
 <?php
 
-use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SiteController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,9 +14,27 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/items-list', function () {
+    return Inertia::render('ItemsList');
+})->middleware(['auth', 'verified'])->name('items.list');
+
+Route::group(['prefix' => 'item'], function () {
+    Route::get('/edit/{id}', function ($id) {
+        return Inertia::render('Items/EditItem', [
+            'itemId' => $id,
+        ]);
+    })->name('item.edit');
+    Route::get('/create', function () {
+        return Inertia::render('Items/CreateItem');
+    })->name('item.create');
+
+})->middleware(['auth', 'verified']);
+
+Route::get('/item/{id}', function ($id) {
+    return Inertia::render('Items/SingleItem', [
+        'itemId' => $id,
+    ]);
+})->name('item.single');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -26,10 +42,5 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/items', [ItemController::class, 'list'])->name('items.list');
-Route::get('/items/{itemID}', [ItemController::class, 'getItemById'])->name('items.single');
-Route::get('/item_rarity', [SiteController::class, 'getAllRarity'])->name('rarity.all');
-Route::get('/found_in', [SiteController::class, 'getAllFoundIn'])->name('found_in.all');
-Route::get('/item_types', [SiteController::class, 'getAllItemTypes'])->name('item_type.all');
-
 require __DIR__.'/auth.php';
+require __DIR__.'/site_api.php';

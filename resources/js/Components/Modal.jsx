@@ -1,22 +1,16 @@
-import {
-    Dialog,
-    DialogPanel,
-    Transition,
-    TransitionChild,
-} from '@headlessui/react';
+import { Dialog, DialogPanel, Transition } from '@headlessui/react';
 
 export default function Modal({
-    children,
+    title = 'Modal title',
+    description = 'Modal description',
     show = false,
-    maxWidth = '2xl',
     closeable = true,
     onClose = () => {},
+    onClick = () => {},
+    maxWidth = '2xl',
+    infoModal = false,
 }) {
-    const close = () => {
-        if (closeable) {
-            onClose();
-        }
-    };
+    const close = () => closeable && onClose();
 
     const maxWidthClass = {
         sm: 'sm:max-w-sm',
@@ -27,38 +21,60 @@ export default function Modal({
     }[maxWidth];
 
     return (
-        <Transition show={show} leave="duration-200">
+        <Transition show={show} appear>
             <Dialog
                 as="div"
-                id="modal"
-                className="fixed inset-0 z-50 flex transform items-center overflow-y-auto px-4 py-6 transition-all sm:px-0"
-                onClose={close}
+                className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                onClose={() => {}}
             >
-                <TransitionChild
-                    enter="ease-out duration-300"
+                <Transition.Child
+                    enter="duration-200 ease-out"
                     enterFrom="opacity-0"
                     enterTo="opacity-100"
-                    leave="ease-in duration-200"
+                    leave="duration-150 ease-in"
                     leaveFrom="opacity-100"
                     leaveTo="opacity-0"
                 >
-                    <div className="absolute inset-0 bg-gray-500/75" />
-                </TransitionChild>
+                    <div className="absolute inset-0 bg-black/50" />
+                </Transition.Child>
 
-                <TransitionChild
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                    enterTo="opacity-100 translate-y-0 sm:scale-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100 translate-y-0 sm:scale-100"
-                    leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                <Transition.Child
+                    enter="duration-200 ease-out"
+                    enterFrom="opacity-0 scale-95"
+                    enterTo="opacity-100 scale-100"
+                    leave="duration-150 ease-in"
+                    leaveFrom="opacity-100 scale-100"
+                    leaveTo="opacity-0 scale-95"
                 >
                     <DialogPanel
-                        className={`mb-6 transform overflow-hidden rounded-lg bg-white shadow-xl transition-all sm:mx-auto sm:w-full ${maxWidthClass}`}
+                        className={`relative w-full bg-white rounded-lg shadow-xl p-6 ${maxWidthClass}`}
                     >
-                        {children}
+                        <Dialog.Title className="text-lg font-semibold text-center">
+                            {title}
+                        </Dialog.Title>
+
+                        <Dialog.Description className="text-sm text-gray-600 mt-2 text-center">
+                            {description}
+                        </Dialog.Description>
+
+                        <div className="mt-6 flex justify-between">
+                            {!infoModal &&
+                                <button
+                                    className="btn btn-sm btn-primary w-25"
+                                    onClick={close}
+                                >
+                                    Close
+                                </button>
+                            }
+                            <button
+                                className={`btn btn-sm  ${infoModal ? 'w-50 mx-auto btn-success' : 'w-25 btn-danger'}`}
+                                onClick={onClick}
+                            >
+                                OK
+                            </button>
+                        </div>
                     </DialogPanel>
-                </TransitionChild>
+                </Transition.Child>
             </Dialog>
         </Transition>
     );

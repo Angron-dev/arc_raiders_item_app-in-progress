@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import SiteApi from "@/API/SiteApi";
 import Filters from "@/Models/Filters";
-import axios from "axios";
 import Item from "@/Models/Item";
+import ItemApi from "@/API/ItemApi";
+import ItemRarity from "@/Models/ItemRarity";
+import ItemCanBeFoundIn from "@/Models/ItemCanBeFoundIn";
+import ItemType from "@/Models/ItemType";
 
 export function useFilters() {
-    const [allRarity, setAllRarity] = useState([]);
-    const [allFoundIn, setAllFoundIn] = useState([]);
-    const [allItemTypes, setAllItemTypes] = useState([]);
+    const [allRarity, setAllRarity] = useState<ItemRarity[]>([]);
+    const [allFoundIn, setAllFoundIn] = useState<ItemCanBeFoundIn[]>([]);
+    const [allItemTypes, setAllItemTypes] = useState<ItemType[]>([]);
     const [loading, setLoading] = useState(true);
 
     const loadFilters = async () => {
@@ -56,7 +59,7 @@ export function useItems(initialFilters: Filters = {
         foundIn: "",
         itemType: ""
     }) => {
-        const params = {
+        const params: Record<string, any>  = {
             page,
             ...(filters.rarity && { rarity_id: filters.rarity }),
             ...(filters.foundIn && { found_in_id: filters.foundIn }),
@@ -67,11 +70,13 @@ export function useItems(initialFilters: Filters = {
         try {
             setLoading(true);
 
-            const response = await axios.get('/items', { params });
-
-            setItems(response.data.data);
-            setCurrentPage(response.data.current_page);
-            setLastPage(response.data.last_page);
+            ItemApi.getAllItems(params).then(
+                (response) => {
+                    setItems(response.data);
+                    setCurrentPage(response.current_page);
+                    setLastPage(response.last_page);
+                }
+            )
 
         } catch (error) {
             console.error("Error fetching items:", error);
