@@ -122,7 +122,6 @@ export default function EditItem() {
                         <div className="mb-3" key={f.name}>
                             <label className="form-label">{f.label}</label>
                             <TextInput
-                                className="form-control"
                                 name={f.name}
                                 value={formData[f.name as keyof typeof formData]}
                                 onChange={handleChange}

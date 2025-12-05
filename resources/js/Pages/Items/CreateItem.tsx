@@ -72,7 +72,6 @@ export default function CreateItem() {
                     <div className="mb-3">
                         <label className="form-label">Item Name</label>
                         <TextInput
-                            className="form-control"
                             name="item_name"
                             value={formData.item_name}
                             onChange={handleChange}
@@ -81,11 +80,9 @@ export default function CreateItem() {
                         {renderError("item_name")}
                     </div>
 
-                    {/* PRICE */}
                     <div className="mb-3">
                         <label className="form-label">Price</label>
                         <TextInput
-                            className="form-control"
                             name="price"
                             value={formData.price}
                             onChange={handleChange}
@@ -93,11 +90,9 @@ export default function CreateItem() {
                         {renderError("price")}
                     </div>
 
-                    {/* ICON */}
                     <div className="mb-3">
                         <label className="form-label">Icon (URL)</label>
                         <TextInput
-                            className="form-control"
                             name="icon"
                             value={formData.icon}
                             onChange={handleChange}
@@ -105,7 +100,6 @@ export default function CreateItem() {
                         {renderError("icon")}
                     </div>
 
-                    {/* DESCRIPTION */}
                     <div className="mb-3">
                         <label className="form-label">Description</label>
                         <textarea

@@ -70,6 +70,11 @@ export default function Header({ header = undefined, children }) {
                                                     Add Item
                                                 </Dropdown.Link>
                                                 <Dropdown.Link
+                                                    href={route('rarity.list')}
+                                                >
+                                                    Rarity List
+                                                </Dropdown.Link>
+                                                <Dropdown.Link
                                                     href={route('logout')}
                                                     method="post"
                                                     as="button"

@@ -12,5 +12,6 @@ class Rarity extends Model
 
     protected $fillable = [
         'rarity_name',
+        'color'
     ];
 }

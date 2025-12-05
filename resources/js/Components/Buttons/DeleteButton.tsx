@@ -5,9 +5,12 @@ import Modal from "@/Components/Modal";
 interface DeleteButtonProps {
     url: string;
     onDeleted?: () => void;
+    className?: string;
+    modalDescription?: string;
+    modalTitle?: string;
 }
 
-export default function DeleteButton({ url, onDeleted }: DeleteButtonProps) {
+export default function DeleteButton({ url, onDeleted, className, modalDescription, modalTitle }: DeleteButtonProps) {
     const [showModal, setShowModal] = useState(false);
 
     const handleOpen = () => {
@@ -33,13 +36,13 @@ export default function DeleteButton({ url, onDeleted }: DeleteButtonProps) {
     return (
         <>
             <button
-                className="btn btn-danger btn-sm mb-2"
+                className={`btn btn-danger btn-sm mb-2 ${className}`}
                 onClick={handleOpen}
             >
                 Delete
             </button>
 
-            <Modal show={showModal} onClose={handleClose} onClick={handleConfirmDelete} title="Delete" description="Are you absolutely sure you want to remove this item permanently?">
+            <Modal show={showModal} onClose={handleClose} onClick={handleConfirmDelete} title={modalTitle ?? "Delete"} description={modalDescription ?? "Are you absolutely sure you want to remove this <strong>permanently</strong>?"}>
             </Modal>
         </>
     );

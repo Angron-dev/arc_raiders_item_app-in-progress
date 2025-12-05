@@ -5,6 +5,7 @@ import Pagination from "@/Pages/components/Pagination";
 import {useEffect, useState} from "react";
 import {useFilters, useItems} from "@/Hooks/useFilters";
 import Header from "@/Layouts/Header";
+import {route} from "ziggy-js";
 
 export default function MainPage({ auth }: { auth: any }) {
 
@@ -48,7 +49,7 @@ export default function MainPage({ auth }: { auth: any }) {
                 >
                     {items.map(item => {
                         return (
-                            <Link href={`/items/${item.id}`} className="text-center border item-box">
+                            <Link href={route('item.single', item.id)} className="text-center border item-box">
                                 <img src={item.icon} alt={item.item_name}  style={{ maxHeight: "100px" }} className='mx-auto'/>
                                 <h5>{item.item_name}</h5>
                                 <h6 className='rarity-box' style={{backgroundColor: item.rarity?.color}}>{item.rarity?.rarity_name}</h6>

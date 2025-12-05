@@ -24,6 +24,7 @@ Route::group(['prefix' => 'item'], function () {
             'itemId' => $id,
         ]);
     })->name('item.edit');
+
     Route::get('/create', function () {
         return Inertia::render('Items/CreateItem');
     })->name('item.create');
@@ -35,6 +36,28 @@ Route::get('/item/{id}', function ($id) {
         'itemId' => $id,
     ]);
 })->name('item.single');
+
+Route::group(['prefix' => 'rarity'], function () {
+    Route::get('/', function () {
+        return Inertia::render('Rarity/RarityList');
+    })->name('rarity.list');
+
+    Route::get('/create', function () {
+        return Inertia::render('Rarity/RarityCreate');
+    })->name('rarity.create');
+
+    Route::get('/edit/{id}', function ($id) {
+        return Inertia::render('Rarity/RarityEdit', [
+            'rarityId' => $id,
+        ]);
+    })->name('rarity.edit');
+
+    Route::get('/{id}', function ($id) {
+    return Inertia::render('Rarity/RaritySingle', [
+        'rarityId' => $id,
+    ]);
+    })->name('rarity.single');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

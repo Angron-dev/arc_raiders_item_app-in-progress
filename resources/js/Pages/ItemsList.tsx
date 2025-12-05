@@ -8,6 +8,8 @@ import ViewButton from "@/Components/Buttons/ViewButton";
 import EditButton from "@/Components/Buttons/EditButton";
 import DeleteButton from "@/Components/Buttons/DeleteButton";
 import {route} from "ziggy-js";
+import Item from "@/Models/Item";
+import DynamicTable from "@/Components/DynamicTable";
 
 export default function ItemsList() {
     const { allRarity, allFoundIn, allItemTypes} = useFilters();
@@ -33,6 +35,71 @@ export default function ItemsList() {
         fetchItems(1, filters);
     }, [filters]);
 
+    const columns = [
+        {
+            header: "Icon",
+            key: "icon",
+            render: (row: Item) => (
+                <img
+                    src={row.icon}
+                    alt={row.item_name}
+                    className="mx-auto"
+                    style={{ maxWidth: "75px" }}
+                />
+            ),
+        },
+        { header: "Name", key: "item_name" },
+        { header: "Description", key: "description" },
+        {
+            header: "Rarity",
+            key: "rarity",
+            render: (row: Item) => (
+                <span style={{ color: row.rarity?.color }}>
+                {row.rarity?.rarity_name ?? "-"}
+            </span>
+            ),
+        },
+        {
+            header: "Found In",
+            key: "found_in",
+            render: (row: Item) => row.found_in?.found_in_name ?? "-",
+        },
+        {
+            header: "Type",
+            key: "item_type",
+            render: (row: Item) => row.item_type?.item_type_name ?? "-",
+        },
+        {
+            header: "Price",
+            key: "price",
+            render: (row: Item) => (
+                <span className="d-flex align-items-center justify-content-center">
+                {row.price}
+                    <img
+                        src="images/currency_symbol.webp"
+                        alt="Currency Symbol"
+                        style={{ maxHeight: "20px" }}
+                        className="ml-1"
+                    />
+            </span>
+            ),
+        },
+        {
+            header: "",
+            key: "actions",
+            render: (row: Item) => (
+                <div className="d-flex flex-column align-items-center">
+                    <ViewButton url={route("item.single", { id: row.id })} />
+                    <EditButton url={route("item.edit", { id: row.id })} />
+                    <DeleteButton
+                        url={route("item.delete", { id: row.id })}
+                        onDeleted={() => fetchItems(1, filters)}
+                    />
+                </div>
+            ),
+        },
+    ];
+
     return (
         <Header header={undefined}>
             <Container>
@@ -46,56 +113,7 @@ export default function ItemsList() {
                     setFilters={setFilters}
                 />
 
-                <table className='table'>
-                    <thead>
-                    <tr className='text-center'>
-                        <th>Icon</th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Rarity</th>
-                        <th>Found In</th>
-                        <th>Type</th>
-                        <th>Price</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    {items.map(item => (
-                        <tr key={item.id} className='text-center'>
-                            <td className="align-middle">
-                                <img
-                                    src={item.icon}
-                                    alt={item.item_name}
-                                    className='mx-auto'
-                                    style={{ maxWidth: "75px" }}
-                                />
-                            </td>
-
-                            <td className="align-middle">{item.item_name}</td>
-                            <td className="align-middle">{item.description}</td>
-                            <td className="align-middle" style={{color: item.rarity?.color}}>{item?.rarity?.rarity_name ?? '-'}</td>
-                            <td className="align-middle">{item?.found_in?.found_in_name ?? '-'}</td>
-                            <td className="align-middle">{item?.item_type?.item_type_name ?? '-'}</td>
-                            <td className="align-middle">
-                                <span className="d-flex align-items-center">
-                                    {item.price}
-                                    <img src="images/currency_symbol.webp" alt="Currency Symbol" style={{ maxHeight: "20px" }} className='ml-1'/>
-                                </span>
-                            </td>
-                            <td className="align-middle">
-                                <div className="d-flex flex-column">
-                                    <ViewButton url={route('item.single', { id: item.id })} />
-                                    <EditButton url={route('item.edit', { id: item.id })} />
-                                    <DeleteButton
-                                        url={route('item.delete', { id: item.id })}
-                                        onDeleted={() => fetchItems(1, filters)} />
-                                </div>
-                            </td>
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
+                <DynamicTable data={items} columns={columns} />
 
                 <div className="d-flex justify-content-center mt-4">
                     <Pagination
