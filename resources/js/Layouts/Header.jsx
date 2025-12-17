@@ -75,6 +75,15 @@ export default function Header({ header = undefined, children }) {
                                                     Rarity List
                                                 </Dropdown.Link>
                                                 <Dropdown.Link
+                                                    href={route('found_in.list')}
+                                                >
+                                                    Found In List
+                                                </Dropdown.Link>                                    <Dropdown.Link
+                                                    href={route('item_type.list')}
+                                                >
+                                                    Item Type List
+                                                </Dropdown.Link>
+                                                <Dropdown.Link
                                                     href={route('logout')}
                                                     method="post"
                                                     as="button"
