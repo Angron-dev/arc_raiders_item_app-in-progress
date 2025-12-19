@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 /**
  * @property int $id
  * @property string $item_name
@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Item extends Model
 {
+    use HasFactory;
+
     protected $table = 'items';
 
     protected $fillable = [
