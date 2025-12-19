@@ -1,59 +1,98 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><img src="public/images/logo.png" width="200" alt="Logo"></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# ARC Raiders Encyclopedia
 
-## About Laravel
+## 📖 About the Project
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**ARC Raiders Encyclopedia** is a fan-made web application created by an enthusiast. This project is a non-commercial hobby initiative and is not officially affiliated with any game, publisher, or brand.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Users can browse the item database without logging in. Public access allows viewing item details such as rarity, item type, and locations where the item can be found. Each item also includes information about its components — what it can be dismantled into and which other items require those components.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Authenticated users have extended permissions. In addition to browsing items, they can create new entries, edit existing ones, and remove items from the database.
 
-## Learning Laravel
+The application also supports importing a base item list from an external API, enabling fast and easy initial data population.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📖 O projekcie
 
-## Laravel Sponsors
+**ARC Raiders Encyclopedia** to fanowska aplikacja webowa stworzona przez pasjonata. Projekt ma charakter hobbystyczny i nie jest oficjalnie powiązany z żadną grą, wydawcą ani marką.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Użytkownicy bez logowania mogą przeglądać bazę przedmiotów oraz sprawdzać szczegóły takie jak rzadkość, typ przedmiotu oraz miejsca jego występowania. Każdy przedmiot zawiera również informacje o tym, na jakie części można go rozłożyć oraz do jakich innych przedmiotów te części są wykorzystywane.
 
-### Premium Partners
+Zalogowani użytkownicy posiadają rozszerzone uprawnienia — poza przeglądaniem danych mogą tworzyć nowe przedmioty, edytować istniejące oraz usuwać wpisy z bazy.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Aplikacja umożliwia także pobranie podstawowej listy przedmiotów z zewnętrznego API, co pozwala szybko zainicjalizować bazę danych.
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Technology Stack
 
-## Code of Conduct
+- **Backend:** Laravel 10
+- **Frontend:** React 18
+- **Build Tool:** Vite
+- **Database:** MySQL
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Installation
+Clone the repository:
+```bash
+git clone https://github.com/Angron-dev/arc_raiders_item_app-in-progress.git
+cd arc_raiders_item_app-in-progress
+```
 
-## Security Vulnerabilities
+Install dependencies:
+```bash
+composer install
+```
+```bash
+npm install
+```
+```bash
+npm run dev
+```
+```bash 
+cp .env.example .env
+php artisan key:generate
+```
+```bash
+php artisan migrate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Download items form external API
+```bash 
+php artisan items:update
+```
+
+## Launch the application
+### Laravel backend
+```bash
+php artisan serve
+```
+
+### React frontend
+```bash
+npm run dev
+```
+
+## Features
+
+- CRUD for items
+- Filter and search items
+- User authentication
+- Responsive UI built with React
+
+## Running Tests
+
+```bash
+php artisan test
+```
+---
+
+
+## Author
+
+WK - [GitHub](https://github.com/Angron-dev)
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License.
+
