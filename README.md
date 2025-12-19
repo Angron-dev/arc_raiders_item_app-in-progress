@@ -2,6 +2,19 @@
 
 # ARC Raiders Encyclopedia
 
+<p align="center">
+  Fan-made item database built with Laravel, React, and Vite
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/status-in%20development-yellow" />
+  <img src="https://img.shields.io/badge/backend-Laravel-red" />
+  <img src="https://img.shields.io/badge/frontend-React-blue" />
+  <img src="https://img.shields.io/badge/build-Vite-purple" />
+  <img src="https://img.shields.io/badge/license-MIT-green" />
+</p>
+
+
 ## 📖 About the Project
 
 **ARC Raiders Encyclopedia** is a fan-made web application created by an enthusiast. This project is a non-commercial hobby initiative and is not officially affiliated with any game, publisher, or brand.
@@ -24,15 +37,15 @@ Zalogowani użytkownicy posiadają rozszerzone uprawnienia — poza przeglądani
 
 Aplikacja umożliwia także pobranie podstawowej listy przedmiotów z zewnętrznego API, co pozwala szybko zainicjalizować bazę danych.
 
+## 🚀 Getting Started
 
-## Technology Stack
+### Requirements
+- PHP 8.2+
+- Composer
+- Node.js 18+
+- MySQL
 
-- **Backend:** Laravel 10
-- **Frontend:** React 18
-- **Build Tool:** Vite
-- **Database:** MySQL
-
-## Installation
+### Installation
 Clone the repository:
 ```bash
 git clone https://github.com/Angron-dev/arc_raiders_item_app-in-progress.git
@@ -62,13 +75,13 @@ Download items form external API
 php artisan items:update
 ```
 
-## Launch the application
-### Laravel backend
+## Run the project
+### Backend
 ```bash
 php artisan serve
 ```
 
-### React frontend
+### Frontend
 ```bash
 npm run dev
 ```
@@ -80,12 +93,24 @@ npm run dev
 - User authentication
 - Responsive UI built with React
 
-## Running Tests
+## 🧪 Testing
 
 ```bash
 php artisan test
 ```
 ---
+
+## 🛣️ Roadmap
+
+- [x] Item browsing
+- [x] Item details view
+- [x] External API import
+- [ ] Advanced filtering and search
+- [ ] Item comments system
+- [ ] User roles & permissions
+- [ ] Favorites / bookmarks
+- [ ] Public API documentation
+- [ ] Advanced CMS for site customization (colors, logos, visual settings)
 
 
 ## Author
