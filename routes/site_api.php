@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\FoundInController;
+use App\Http\Controllers\LootAreaController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemTypeController;
 use App\Http\Controllers\RarityController;
@@ -15,7 +15,7 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('/items', [ItemController::class, 'list'])->name('api.items.list');
 
     Route::get('/item_rarity', [SiteController::class, 'getAllRarity'])->name('rarity.all');
-    Route::get('/found_in', [SiteController::class, 'getAllFoundIn'])->name('found_in.all');
+    Route::get('/loot_areas', [SiteController::class, 'getAllLootAreas'])->name('loot_area.all');
     Route::get('/item_types', [SiteController::class, 'getAllItemTypes'])->name('item_type.all');
 
     Route::group(['prefix' => 'rarity'], function () {
@@ -24,11 +24,11 @@ Route::group(['prefix' => 'api'], function () {
         Route::put('/edit/{id}', [RarityController::class, 'update'])->name('api.rarity.edit');
         Route::delete('/delete/{id}', [RarityController::class, 'destroy'])->name('api.rarity.delete');
     });
-    Route::group(['prefix' => 'found_in'], function () {
-        Route::get('/{id}', [FoundInController::class, 'getItemCanBeFoundById'])->name('api.found_in.single');
-        Route::post('/create', [FoundInController::class, 'store'])->name('api.found_in.create');
-        Route::put('/edit/{id}', [FoundInController::class, 'update'])->name('api.found_in.edit');
-        Route::delete('/delete/{id}', [FoundInController::class, 'destroy'])->name('api.found_in.delete');
+    Route::group(['prefix' => 'loot_area'], function () {
+        Route::get('/{id}', [LootAreaController::class, 'getLootAreaById'])->name('api.loot_area.single');
+        Route::post('/create', [LootAreaController::class, 'store'])->name('api.loot_area.create');
+        Route::put('/edit/{id}', [LootAreaController::class, 'update'])->name('api.loot_area.edit');
+        Route::delete('/delete/{id}', [LootAreaController::class, 'destroy'])->name('api.loot_area.delete');
     });
     Route::group(['prefix' => 'item_type'], function () {
         Route::get('/{id}', [ItemTypeController::class, 'getItemTypeById'])->name('api.item_type.single');

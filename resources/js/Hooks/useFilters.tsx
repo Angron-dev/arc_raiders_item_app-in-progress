@@ -4,25 +4,25 @@ import Filters from "@/Models/Filters";
 import Item from "@/Models/Item";
 import ItemApi from "@/API/ItemApi";
 import ItemRarity from "@/Models/ItemRarity";
-import ItemCanBeFoundIn from "@/Models/ItemCanBeFoundIn";
+import LootArea from "@/Models/LootArea";
 import ItemType from "@/Models/ItemType";
 
 export function useFilters() {
     const [allRarity, setAllRarity] = useState<ItemRarity[]>([]);
-    const [allFoundIn, setAllFoundIn] = useState<ItemCanBeFoundIn[]>([]);
+    const [allLootArea, setAllLootArea] = useState<LootArea[]>([]);
     const [allItemTypes, setAllItemTypes] = useState<ItemType[]>([]);
     const [loading, setLoading] = useState(true);
 
     const loadFilters = async () => {
         try {
-            const [rarity, foundIn, itemTypes] = await Promise.all([
+            const [rarity, lootArea, itemTypes] = await Promise.all([
                 SiteApi.getAllRarity(),
-                SiteApi.getAllFoundIn(),
+                SiteApi.getAllLootAreas(),
                 SiteApi.getAllItemTypes()
             ]);
 
             setAllRarity(rarity);
-            setAllFoundIn(foundIn);
+            setAllLootArea(lootArea);
             setAllItemTypes(itemTypes);
         } catch (error) {
             console.error("Error loading filters", error);
@@ -37,7 +37,7 @@ export function useFilters() {
 
     return {
         allRarity,
-        allFoundIn,
+        allLootArea,
         allItemTypes,
         loading
     };
@@ -45,7 +45,7 @@ export function useFilters() {
 export function useItems(initialFilters: Filters = {
     itemName: "",
     rarity: "",
-    foundIn: "",
+    lootArea: "",
     itemType: ""
 }) {
     const [items, setItems] = useState<Item[]>([]);
@@ -56,13 +56,13 @@ export function useItems(initialFilters: Filters = {
     const fetchItems = async (page = 1, filters: Filters = {
         itemName: "",
         rarity: "",
-        foundIn: "",
+        lootArea: "",
         itemType: ""
     }) => {
         const params: Record<string, any>  = {
             page,
             ...(filters.rarity && { rarity_id: filters.rarity }),
-            ...(filters.foundIn && { found_in_id: filters.foundIn }),
+            ...(filters.lootArea && { loot_area_id: filters.lootArea }),
             ...(filters.itemType && { item_type_id: filters.itemType }),
             ...(filters.itemName && { item_name: filters.itemName }),
         };

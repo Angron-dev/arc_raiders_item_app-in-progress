@@ -9,23 +9,34 @@ import ItemApi from "@/API/ItemApi";
 import { router } from "@inertiajs/react";
 import Modal from "@/Components/Modal";
 import { route } from "ziggy-js";
+import MultiCheckboxSelect from "@/Pages/components/Inputs/MultipleCheckboxSelect";
 
 interface InputErrors {
     [key: string]: string[];
 }
 
+type CreateItemFormData = {
+    item_name: string;
+    price: string;
+    icon: string;
+    description: string;
+    loot_areas: number[];
+    rarity_id: string;
+    item_type_id: string;
+};
+
 export default function CreateItem() {
     const [showModal, setShowModal] = useState(false);
     const [inputErrors, setInputErrors] = useState<InputErrors>({});
 
-    const { allRarity, allFoundIn, allItemTypes, loading } = useFilters();
+    const { allRarity, allLootArea, allItemTypes, loading } = useFilters();
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<CreateItemFormData>({
         item_name: "",
         price: "",
         icon: "",
         description: "",
-        found_in_id: "",
+        loot_areas: [],
         rarity_id: "",
         item_type_id: "",
     });
@@ -116,23 +127,22 @@ export default function CreateItem() {
                     ) : (
                         <div className="row">
                             <div className="mb-3 col">
-                                <label className="form-label">Found In</label>
-                                <SelectInput
+                                <label className="form-label">Loot Areas</label>
+
+                                <MultiCheckboxSelect
                                     options={Object.fromEntries(
-                                        allFoundIn.map(f => [
-                                            f.id,
-                                            f.found_in_name,
-                                        ])
+                                        allLootArea.map(a => [a.id, a.loot_area_name])
                                     )}
-                                    value={formData.found_in_id}
-                                    onValueChange={value =>
+                                    value={formData.loot_areas}
+                                    onChange={(value) =>
                                         setFormData(prev => ({
                                             ...prev,
-                                            found_in_id: value,
+                                            loot_areas: value,
                                         }))
                                     }
                                 />
-                                {renderError("found_in_id")}
+
+                                {renderError("loot_areas")}
                             </div>
 
                             <div className="mb-3 col">

@@ -18,9 +18,10 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('item_can_be_found_in', function (Blueprint $table) {
+        Schema::create('loot_areas', function (Blueprint $table) {
             $table->id();
-            $table->string('found_in_name');
+            $table->string('loot_area_name');
+            $table->string('symbol')->nullable();
             $table->timestamps();
         });
 
@@ -36,10 +37,16 @@ return new class extends Migration
             $table->integer('price')->nullable();
             $table->string('icon')->nullable();
             $table->string('description')->nullable();
-            $table->foreignId('found_in_id')->nullable()->constrained('item_can_be_found_in');
             $table->foreignId('rarity_id')->nullable()->constrained('item_rarity');
             $table->foreignId('item_type_id')->nullable()->constrained('item_type');
             $table->boolean('can_be_deconstructed')->default(true);
+            $table->timestamps();
+        });
+
+        Schema::create('item_loot_area', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('item_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('loot_area_id')->constrained('loot_areas')->cascadeOnDelete();
             $table->timestamps();
         });
 

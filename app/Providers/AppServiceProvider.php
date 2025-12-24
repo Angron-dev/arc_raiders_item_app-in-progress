@@ -2,16 +2,16 @@
 
 namespace App\Providers;
 
-use App\Repository\EloquentFoundInReadRepository;
-use App\Repository\EloquentFoundInWriteRepository;
+use App\Repository\EloquentLootAreaReadRepository;
+use App\Repository\EloquentLootAreaWriteRepository;
 use App\Repository\EloquentItemReadRepository;
 use App\Repository\EloquentItemTypeReadRepository;
 use App\Repository\EloquentItemTypeWriteRepository;
 use App\Repository\EloquentItemWriteRepository;
 use App\Repository\EloquentRarityReadRepository;
 use App\Repository\EloquentRarityWriteRepository;
-use App\Repository\FoundInReadRepository;
-use App\Repository\FoundInWriteRepository;
+use App\Repository\LootAreaReadRepository;
+use App\Repository\LootAreaWriteRepository;
 use App\Repository\ItemReadRepository;
 use App\Repository\ItemTypeReadRepository;
 use App\Repository\ItemTypeWriteRepository;
@@ -28,8 +28,8 @@ class AppServiceProvider extends ServiceProvider
         ItemWriteRepository::class => EloquentItemWriteRepository::class,
         RarityReadRepository::class => EloquentRarityReadRepository::class,
         RarityWriteRepository::class => EloquentRarityWriteRepository::class,
-        FoundInReadRepository::class => EloquentFoundInReadRepository::class,
-        FoundInWriteRepository::class => EloquentFoundInWriteRepository::class,
+        LootAreaReadRepository::class => EloquentLootAreaReadRepository::class,
+        LootAreaWriteRepository::class => EloquentLootAreaWriteRepository::class,
         ItemTypeReadRepository::class => EloquentItemTypeReadRepository::class,
         ItemTypeWriteRepository::class => EloquentItemTypeWriteRepository::class,
     ];

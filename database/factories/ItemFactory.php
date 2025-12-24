@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\FoundIn;
+use App\Models\LootArea;
 use App\Models\Item;
 use App\Models\ItemType;
 use App\Models\Rarity;
@@ -16,7 +16,7 @@ class ItemFactory extends Factory
 
     public function definition()
     {
-        $foundIn = FoundIn::find(1);
+        $lootArea = LootArea::find(1);
         $rarity = Rarity::find(1);
         $itemType = ItemType::find(1);
 
@@ -24,9 +24,8 @@ class ItemFactory extends Factory
             'item_name' => $this->faker->word(),
             'price' => $this->faker->numberBetween(1, 100000),
             'description' => $this->faker->sentence(),
-            'found_in_id' => $foundIn->id ?? FoundIn::factory()->create()->id,
-            'rarity_id' => $rarity->id ?? Rarity::factory()->create()->id,
-            'item_type_id' => $itemType->id ?? ItemType::factory()->create()->id,
+            'rarity_id' => Rarity::factory(),
+            'item_type_id' => ItemType::factory(),
             'can_be_deconstructed' => $this->faker->boolean(),
             'icon' => $this->faker->imageUrl(),
         ];

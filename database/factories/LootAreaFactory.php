@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\FoundIn;
+use App\Models\LootArea;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class FoundInFactory extends Factory
+class LootAreaFactory extends Factory
 {
-    protected $model = FoundIn::class;
+    protected $model = LootArea::class;
 
     public function definition()
     {
         return [
-          'found_in_name' => $this->faker->word(),
+          'loot_area_name' => $this->faker->word(),
         ];
     }
 }

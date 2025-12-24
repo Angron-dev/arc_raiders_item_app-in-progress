@@ -7,15 +7,15 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-final class UpdateItemCanBeFoundRequest extends FormRequest
+final class UpdateLootAreaRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'found_in_name' => [
+            'loot_area_name' => [
                 'string',
                 'required',
-                Rule::unique('item_can_be_found_in', 'found_in_name')->ignore($this->route('id')),
+                Rule::unique('loot_areas', 'loot_area_name')->ignore($this->route('id')),
             ],
         ];
     }

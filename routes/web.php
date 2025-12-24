@@ -59,26 +59,26 @@ Route::group(['prefix' => 'rarity'], function () {
     })->name('rarity.single');
 });
 
-Route::group(['prefix' => 'found_in'], function () {
+Route::group(['prefix' => 'loot_area'], function () {
     Route::get('/', function () {
-        return Inertia::render('FoundIn/FoundInList');
-    })->name('found_in.list');
+        return Inertia::render('LootArea/LootAreaList');
+    })->name('loot_area.list');
 
     Route::get('/create', function () {
-        return Inertia::render('FoundIn/FoundInCreate');
-    })->name('found_in.create');
+        return Inertia::render('LootArea/LootAreaCreate');
+    })->name('loot_area.create');
 
     Route::get('/edit/{id}', function ($id) {
-        return Inertia::render('FoundIn/FoundInEdit', [
-            'foundInId' => $id,
+        return Inertia::render('LootArea/LootAreaEdit', [
+            'lootAreaId' => $id,
         ]);
-    })->name('found_in.edit');
+    })->name('loot_area.edit');
 
     Route::get('/{id}', function ($id) {
-        return Inertia::render('FoundIn/FoundInSingle', [
-            'foundInId' => $id,
+        return Inertia::render('LootArea/LootAreaSingle', [
+            'lootAreaId' => $id,
         ]);
-    })->name('found_in.single');
+    })->name('loot_area.single');
 });
 
 Route::group(['prefix' => 'item_type'], function () {

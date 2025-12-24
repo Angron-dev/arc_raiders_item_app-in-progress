@@ -5,7 +5,7 @@ import TextInput from "./Inputs/TextInput";
 
 export interface FiltersSectionProps {
     allRarity: { id: number; rarity_name: string }[];
-    allFoundIn: { id: number; found_in_name: string }[];
+    allLootAreas: { id: number; loot_area_name: string }[];
     allItemTypes: { id: number; item_type_name: string }[];
     filters: Filters;
     setFilters: Dispatch<SetStateAction<Filters>>;
@@ -20,7 +20,7 @@ const toOptions = <T extends Record<string, any>>(
 
 export default function FiltersSection({
    allRarity,
-   allFoundIn,
+   allLootAreas,
    allItemTypes,
    filters,
    setFilters
@@ -35,7 +35,7 @@ export default function FiltersSection({
 
     const selectFilters: (
         | SelectFilter<{ id: number; rarity_name: string }>
-        | SelectFilter<{ id: number; found_in_name: string }>
+        | SelectFilter<{ id: number; loot_area_name: string }>
         | SelectFilter<{ id: number; item_type_name: string }>
         )[] = [
         {
@@ -45,10 +45,10 @@ export default function FiltersSection({
             label: "rarity_name"
         },
         {
-            name: "foundIn",
-            placeholder: "Found in",
-            list: allFoundIn,
-            label: "found_in_name"
+            name: "lootArea",
+            placeholder: "Loot Areas",
+            list: allLootAreas,
+            label: "loot_area_name"
         },
         {
             name: "itemType",
@@ -70,19 +70,27 @@ export default function FiltersSection({
                 }
             />
 
-            {selectFilters.map(filter => (
-                <SelectInput
-                    key={filter.name}
-                    className="me-3 w-25"
-                    name={filter.name}
-                    optionPlaceholder={filter.placeholder}
-                    options={toOptions(filter.list, "id", filter.label)}
-                    value={filters[filter.name] ?? ""}
-                    onValueChange={(value) =>
-                        setFilters(prev => ({ ...prev, [filter.name]: value }))
-                    }
-                />
-            ))}
+            {selectFilters.map(filter => {
+                type ItemType = typeof filter.list[number];
+
+                return (
+                    <SelectInput
+                        key={String(filter.name)}
+                        className="me-3 w-25"
+                        name={String(filter.name)}
+                        optionPlaceholder={filter.placeholder}
+                        options={toOptions<ItemType>(
+                            filter.list,
+                            "id",
+                            filter.label as keyof ItemType
+                        )}
+                        value={filters[filter.name] ?? ""}
+                        onValueChange={(value) =>
+                            setFilters(prev => ({ ...prev, [filter.name]: value }))
+                        }
+                    />
+                );
+            })}
 
         </div>
     );

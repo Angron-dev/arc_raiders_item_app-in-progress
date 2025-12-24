@@ -6,8 +6,8 @@ class SiteApi extends AbstractApi{
         return this.fetchData('/item_rarity');
     }
 
-    static getAllFoundIn() {
-        return this.fetchData('/found_in');
+    static getAllLootAreas() {
+        return this.fetchData('/loot_areas');
     }
     static getAllItemTypes() {
         return this.fetchData('/item_types');

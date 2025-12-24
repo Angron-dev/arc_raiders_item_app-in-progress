@@ -12,6 +12,7 @@ use App\Repository\ItemWriteRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ItemController extends Controller
 {
@@ -41,11 +42,17 @@ class ItemController extends Controller
 
         return redirect()->route('items.list');
     }
-    public function store(CreateItemRequest $createItemRequest): RedirectResponse
+    public function store(CreateItemRequest $request): RedirectResponse
     {
-        $item = $createItemRequest->all();
-        $newItem = new Item($item);
+        $itemData = $request->except('loot_areas');
+
+        $newItem = new Item($itemData);
         $this->itemWriteRepository->save($newItem);
+
+        $lootAreaIds = $request->input('loot_areas', []);
+        if (!empty($lootAreaIds)) {
+            $newItem->lootAreas()->sync($lootAreaIds);
+        }
 
         return redirect()->route('items.list');
     }
@@ -53,11 +60,20 @@ class ItemController extends Controller
     public function update(UpdateItemRequest $request, int $id): JsonResponse
     {
         $item = $this->itemReadRepository->getItemById($id);
-        $item->update($request->validated());
+
+        DB::transaction(function () use ($item, $request) {
+
+            $item->update(
+                $request->safe()->except('loot_areas')
+            );
+            $item->lootAreas()->sync(
+                $request->validated('loot_areas')
+            );
+        });
 
         return response()->json([
             'message' => 'Item updated successfully',
-            'item' => $item,
+            'item' => $item->load('lootAreas'),
         ]);
     }
 

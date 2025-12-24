@@ -7,23 +7,34 @@ import Spinner from "@/Components/Spinner";
 import ItemApi from "@/API/ItemApi";
 import { router, usePage } from '@inertiajs/react';
 import Modal from "@/Components/Modal";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { route } from "ziggy-js";
+import MultiCheckboxSelect from "@/Pages/components/Inputs/MultipleCheckboxSelect";
 
 interface InputErrors {
     [key: string]: string[];
 }
 
+type EditItemFormData = {
+    item_name: string;
+    price: string;
+    icon: string;
+    description: string;
+    loot_areas: number[];
+    rarity_id: string;
+    item_type_id: string;
+};
+
 export default function EditItem() {
     const { itemId } = usePage<{ itemId: number }>().props;
-    const { allRarity, allFoundIn, allItemTypes, loading: filtersLoading } = useFilters();
+    const { allRarity, allLootArea, allItemTypes, loading: filtersLoading } = useFilters();
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<EditItemFormData>({
         item_name: "",
         price: "",
         icon: "",
         description: "",
-        found_in_id: "",
+        loot_areas: [],
         rarity_id: "",
         item_type_id: "",
     });
@@ -32,57 +43,59 @@ export default function EditItem() {
     const [showModal, setShowModal] = useState(false);
     const [loadingItem, setLoadingItem] = useState(true);
 
-    useEffect(() => {
-        const fetchItem = async () => {
-            try {
-                const data = await ItemApi.getItemById(itemId);
-                setFormData({
-                    item_name: data.item_name,
-                    price: data.price,
-                    icon: data.icon,
-                    description: data.description,
-                    found_in_id: data.found_in_id,
-                    rarity_id: data.rarity_id,
-                    item_type_id: data.item_type_id,
-                });
-            } catch (error) {
-                console.error("Error fetching item:", error);
-            } finally {
-                setLoadingItem(false);
-            }
-        };
-        fetchItem();
+    const fetchItem = React.useCallback(async () => {
+        try {
+            const data = await ItemApi.getItemById(itemId);
+            setFormData({
+                item_name: data.item_name,
+                price: data.price,
+                icon: data.icon,
+                description: data.description,
+                loot_areas: data.loot_areas.map((a: { id: number }) => a.id),
+                rarity_id: data.rarity_id,
+                item_type_id: data.item_type_id,
+            });
+        } catch (error) {
+            console.error("Error fetching item:", error);
+        } finally {
+            setLoadingItem(false);
+        }
     }, [itemId]);
 
+    useEffect(() => {
+        fetchItem();
+    }, [fetchItem]);
+
     const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+
+        setFormData(prev => ({
+            ...prev,
+            [name]: name === "price" ? value.replace(/\D/g, "") : value,
+        }));
     };
 
-    const handleSelectChange = (name: string, value: string) => {
-        setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setInputErrors({});
+        setShowModal(true);
+    };
+
+    const handleModalOk = async () => {
         try {
+            setInputErrors({});
             await ItemApi.updateItem(itemId, formData);
-            setShowModal(true);
+            setShowModal(false);
+            router.get(route('items.list'));
         } catch (error: any) {
+            setShowModal(false);
             if (error.response?.data?.errors) {
                 setInputErrors(error.response.data.errors);
             } else {
                 console.error("Error updating item:", error);
             }
         }
-    };
-
-    const handleModalOk = () => {
-        setShowModal(false);
-        router.get(route('items.list'));
     };
 
     const renderError = (field: string) => {
@@ -100,16 +113,6 @@ export default function EditItem() {
         { name: 'item_name', label: 'Item Name', required: true },
         { name: 'price', label: 'Price' },
         { name: 'icon', label: 'Icon (URL)' },
-    ];
-
-    const textareaFields = [
-        { name: 'description', label: 'Description' },
-    ];
-
-    const selectFields = [
-        { name: 'found_in_id', label: 'Found In', options: Object.fromEntries(allFoundIn.map(r => [r.id, r.found_in_name])) },
-        { name: 'rarity_id', label: 'Rarity', options: Object.fromEntries(allRarity.map(r => [r.id, r.rarity_name])) },
-        { name: 'item_type_id', label: 'Item Type', options: Object.fromEntries(allItemTypes.map(r => [r.id, r.item_type_name])) },
     ];
 
     return (
@@ -131,31 +134,63 @@ export default function EditItem() {
                         </div>
                     ))}
 
-                    {textareaFields.map(f => (
-                        <div className="mb-3" key={f.name}>
-                            <label className="form-label">{f.label}</label>
-                            <textarea
-                                className="form-control"
-                                name={f.name}
-                                value={formData[f.name as keyof typeof formData]}
-                                onChange={handleChange}
-                            />
-                            {renderError(f.name)}
-                        </div>
-                    ))}
+                    <div className="mb-3">
+                        <label className="form-label">Description</label>
+                        <textarea
+                            className="form-control"
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                        />
+                        {renderError("description")}
+                    </div>
 
                     <div className="row">
-                        {selectFields.map(f => (
-                            <div className="mb-3 col" key={f.name}>
-                                <label className="form-label">{f.label}</label>
-                                <SelectInput
-                                    options={f.options}
-                                    value={formData[f.name as keyof typeof formData]}
-                                    onValueChange={value => handleSelectChange(f.name, value)}
-                                />
-                                {renderError(f.name)}
-                            </div>
-                        ))}
+                        <div className="mb-3 col">
+                            <label className="form-label">Loot Areas</label>
+
+                            <MultiCheckboxSelect
+                                options={Object.fromEntries(
+                                    allLootArea.map(a => [a.id, a.loot_area_name])
+                                )}
+                                value={formData.loot_areas}
+                                onChange={(value) =>
+                                    setFormData(prev => ({
+                                        ...prev,
+                                        loot_areas: value,
+                                    }))
+                                }
+                            />
+
+                            {renderError("loot_areas")}
+                        </div>
+                        <div className="mb-3 col">
+                            <label className="form-label">Rarity</label>
+                            <SelectInput
+                                options={Object.fromEntries(
+                                    allRarity.map(r => [r.id, r.rarity_name])
+                                )}
+                                value={formData.rarity_id}
+                                onValueChange={(value) =>
+                                    setFormData(prev => ({ ...prev, rarity_id: value }))
+                                }
+                            />
+                            {renderError("rarity_id")}
+                        </div>
+
+                        <div className="mb-3 col">
+                            <label className="form-label">Item Type</label>
+                            <SelectInput
+                                options={Object.fromEntries(
+                                    allItemTypes.map(t => [t.id, t.item_type_name])
+                                )}
+                                value={formData.item_type_id}
+                                onValueChange={(value) =>
+                                    setFormData(prev => ({ ...prev, item_type_id: value }))
+                                }
+                            />
+                            {renderError("item_type_id")}
+                        </div>
                     </div>
 
                     <button type="submit" className="btn btn-primary">Update Item</button>

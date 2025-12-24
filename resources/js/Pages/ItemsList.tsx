@@ -1,6 +1,6 @@
 import Header from '../Layouts/Header';
 import Container from './components/Container';
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import FiltersSection from "../Pages/components/FiltersSection";
 import Pagination from "../Pages/components/Pagination";
 import { useFilters, useItems } from "@/Hooks/useFilters";
@@ -10,15 +10,20 @@ import DeleteButton from "@/Components/Buttons/DeleteButton";
 import {route} from "ziggy-js";
 import Item from "@/Models/Item";
 import DynamicTable from "@/Components/DynamicTable";
+import CurrencyAmount from "@/Components/CurrencyAmount";
+import { preloadImages } from "@/Utils/imagePreloader";
+import Spinner from "@/Components/Spinner";
 
 export default function ItemsList() {
-    const { allRarity, allFoundIn, allItemTypes} = useFilters();
+    const { allRarity, allLootArea, allItemTypes } = useFilters();
+
     const [filters, setFilters] = useState({
         rarity: '',
-        foundIn: '',
+        lootArea: '',
         itemType: '',
         itemName: ''
     });
+
     const {
         items,
         currentPage,
@@ -26,16 +31,39 @@ export default function ItemsList() {
         fetchItems
     } = useItems(filters);
 
+    const [dataLoading, setDataLoading] = useState(true);
+    const [imagesLoading, setImagesLoading] = useState(true);
 
     useEffect(() => {
-        fetchItems(1);
-    }, []);
-
-    useEffect(() => {
-        fetchItems(1, filters);
+        (async () => {
+            setDataLoading(true);
+            await fetchItems(1, filters);
+            setDataLoading(false);
+        })();
     }, [filters]);
 
-    const columns = [
+    useEffect(() => {
+        if (!items.length) return;
+
+        const imageUrls: string[] = [
+            ...items.map((item) => item.icon),
+            "/images/currency_symbol.webp",
+        ];
+
+
+        items.forEach(item => {
+            item.loot_areas?.forEach((la: any) => {
+                if (la.icon) imageUrls.push(la.icon);
+            });
+        });
+
+        setImagesLoading(true);
+        preloadImages(imageUrls).then(() => setImagesLoading(false));
+    }, [items]);
+
+    const isLoading = dataLoading || imagesLoading;
+
+    const columns = useMemo(() => [
         {
             header: "Icon",
             key: "icon",
@@ -43,7 +71,6 @@ export default function ItemsList() {
                 <img
                     src={row.icon}
                     alt={row.item_name}
-                    className="mx-auto"
                     style={{ maxWidth: "75px" }}
                 />
             ),
@@ -55,14 +82,15 @@ export default function ItemsList() {
             key: "rarity",
             render: (row: Item) => (
                 <span style={{ color: row.rarity?.color }}>
-                {row.rarity?.rarity_name ?? "-"}
-            </span>
+                    {row.rarity?.rarity_name ?? "-"}
+                </span>
             ),
         },
         {
-            header: "Found In",
-            key: "found_in",
-            render: (row: Item) => row.found_in?.found_in_name ?? "-",
+            header: "Loot Area",
+            key: "loot_area",
+            render: (row: Item) =>
+                row.loot_areas?.map((la: any) => la.loot_area_name).join(", "),
         },
         {
             header: "Type",
@@ -72,17 +100,7 @@ export default function ItemsList() {
         {
             header: "Price",
             key: "price",
-            render: (row: Item) => (
-                <span className="d-flex align-items-center justify-content-center">
-                {row.price}
-                    <img
-                        src="images/currency_symbol.webp"
-                        alt="Currency Symbol"
-                        style={{ maxHeight: "20px" }}
-                        className="ml-1"
-                    />
-            </span>
-            ),
+            render: (row: Item) => <CurrencyAmount value={row.price} />,
         },
         {
             header: "",
@@ -98,30 +116,38 @@ export default function ItemsList() {
                 </div>
             ),
         },
-    ];
+    ], []);
 
     return (
         <Header header={undefined}>
             <Container>
-                <h2 className='text-center mb-5'>Items List</h2>
 
-                <FiltersSection
-                    allRarity={allRarity}
-                    allFoundIn={allFoundIn}
-                    allItemTypes={allItemTypes}
-                    filters={filters}
-                    setFilters={setFilters}
-                />
+                {isLoading ? (
+                    <Spinner/>
+                ) : (
+                    <>
+                        <h2 className='text-center mb-5'>Items List</h2>
 
-                <DynamicTable data={items} columns={columns} />
+                        <FiltersSection
+                            allRarity={allRarity}
+                            allLootAreas={allLootArea}
+                            allItemTypes={allItemTypes}
+                            filters={filters}
+                            setFilters={setFilters}
+                        />
 
-                <div className="d-flex justify-content-center mt-4">
-                    <Pagination
-                        currentPage={currentPage}
-                        lastPage={lastPage}
-                        fetchItems={fetchItems}
-                    />
-                </div>
+                        <DynamicTable data={items} columns={columns} />
+
+                        <div className="d-flex justify-content-center mt-4">
+                            <Pagination
+                                currentPage={currentPage}
+                                lastPage={lastPage}
+                                fetchItems={fetchItems}
+                            />
+                        </div>
+                    </>
+                )}
+
             </Container>
         </Header>
     );

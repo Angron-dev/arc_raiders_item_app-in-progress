@@ -20,10 +20,11 @@ final class UpdateItemRequest extends FormRequest
             ],
             'description' => ['string', 'required'],
             'rarity_id' => ['int', 'exists:item_rarity,id', 'required'],
-            'found_in_id' => ['int', 'exists:item_can_be_found_in,id', 'nullable'],
             'item_type_id' => ['int', 'exists:item_type,id', 'nullable'],
             'price' => ['int', 'min:0', 'required'],
             'icon' => ['string', 'url', 'nullable'],
+            'loot_areas' => ['array', 'nullable'],
+            'loot_areas.*' => ['int', 'exists:loot_areas,id'],
         ];
     }
 }

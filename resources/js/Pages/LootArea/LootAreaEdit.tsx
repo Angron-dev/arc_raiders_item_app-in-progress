@@ -1,71 +1,90 @@
 import Header from "@/Layouts/Header";
 import Container from "@/Pages/components/Container";
 import TextInput from "@/Pages/components/Inputs/TextInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { router, usePage } from "@inertiajs/react";
+import Spinner from "@/Components/Spinner";
 import Modal from "@/Components/Modal";
 import { route } from "ziggy-js";
-import FoundInApi from "@/API/FoundInApi";
+import LootAreaApi from "@/API/LootAreaApi";
 
-interface FoundInErrors {
+interface LootAreaErrors {
     [key: string]: string[];
 }
+export default function LootAreaEdit() {
+    const { lootAreaId } = usePage<{ lootAreaId: number }>().props;
 
-export default function FoundInCreate() {
+    const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [foundInErrors, setFoundInErrors] = useState<FoundInErrors>({});
+    const [lootAreaErrors, setLootAreaErrors] = useState<LootAreaErrors>({});
     const [formData, setFormData] = useState({
-        found_in_name: "",
+        loot_area_name: "",
     });
+
+    useEffect(() => {
+        LootAreaApi.getLootAreaById(lootAreaId).then((data) => {
+            setFormData(data);
+            setLoading(false);
+        });
+    }, [lootAreaId]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        let newValue = value;
+
+        if (name === "color" && !value.startsWith("#")) {
+            newValue = "#" + value;
+        }
+
+        setFormData(prev => ({ ...prev, [name]: newValue }));
     };
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setFoundInErrors({});
+        setLootAreaErrors({});
 
         try {
-            await FoundInApi.createFoundIn(formData);
+            await LootAreaApi.updateLootArea(lootAreaId, formData);
             setShowModal(true);
         } catch (error: any) {
-            setFoundInErrors(error?.response?.data?.errors || {});
+            setLootAreaErrors(error?.response?.data?.errors || {});
         }
     };
 
     const handleModalOk = () => {
         setShowModal(false);
-        router.get(route("found_in.list"));
+        router.get(route("loot_area.list"));
     };
+
+    if (loading) {
+        return <Spinner />;
+    }
 
     return (
         <Header>
             <Container>
-                <h2>Create Found In</h2>
+                <h2>Edit Loot Area</h2>
 
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
-                        <label className="form-label">Found In Name</label>
+                        <label className="form-label">Loot Area Name</label>
                         <TextInput
-                            name="found_in_name"
-                            value={formData.found_in_name}
+                            name="loot_area_name"
+                            value={formData.loot_area_name}
                             onChange={handleChange}
                         />
                         <span className="text-danger">
-                            {foundInErrors["found_in_name"]?.[0]}
+                            {lootAreaErrors["loot_area_name"]?.[0]}
                         </span>
                     </div>
-
                     <button type="submit" className="btn btn-primary">Submit</button>
                 </form>
 
                 <Modal
                     show={showModal}
                     onClose={() => setShowModal(false)}
-                    title="Found in Created"
-                    description="Item found in created successfully"
+                    title="Loot Area Update"
+                    description="Loot area in updated successfully"
                     onClick={handleModalOk}
                     infoModal={true}
                 />

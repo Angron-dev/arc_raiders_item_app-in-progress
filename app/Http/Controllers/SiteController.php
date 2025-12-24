@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
-use App\Models\FoundIn;
+use App\Models\LootArea;
 use App\Models\ItemType;
 use App\Models\Rarity;
 use Illuminate\Support\Collection;
@@ -15,9 +15,9 @@ class SiteController extends Controller
     {
         return Rarity::all();
     }
-    function getAllFoundIn(): Collection
+    function getAllLootAreas(): Collection
     {
-        return FoundIn::all();
+        return LootArea::all();
     }
     function getAllItemTypes(): Collection
     {

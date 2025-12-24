@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $item_name
- * @property int|null $found_in_id
+ * @property int|null $loot_areas_ids
  * @property int|null $rarity_id
  * @property int|null $item_type_id
  * @property int|null $price
@@ -26,13 +26,17 @@ class Item extends Model
 
     protected $fillable = [
         'item_name',
-        'found_in_id',
+        'loot_areas_ids',
         'rarity_id',
         'item_type_id',
         'price',
         'icon',
         'description',
         'can_be_deconstructed',
+    ];
+    protected $casts = [
+        'loot_areas_ids' => 'array',
+        'can_be_deconstructed' => 'boolean',
     ];
 
     public function recipeComponents()
@@ -52,10 +56,16 @@ class Item extends Model
         return $this->belongsTo(Rarity::class, 'rarity_id', 'id');
     }
 
-    public function foundIn()
+    public function lootAreas()
     {
-        return $this->belongsTo(FoundIn::class, 'found_in_id', 'id');
+        return $this->belongsToMany(
+            LootArea::class,
+            'item_loot_area',
+            'item_id',
+            'loot_area_id'
+        );
     }
+
     public function itemType()
     {
         return $this->belongsTo(ItemType::class, 'item_type_id', 'id');

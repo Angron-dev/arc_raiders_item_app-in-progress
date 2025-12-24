@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Models\FoundIn;
+use App\Models\LootArea;
 use App\Models\Item;
 use App\Models\ItemType;
 use App\Models\Rarity;
@@ -25,7 +25,9 @@ class ItemControllerTest extends TestCase
     #[Test]
     public function test_return_single_item_by_id(): void
     {
-        $item = Item::factory()->create();
+        Item::factory()
+            ->has(LootArea::factory()->count(2))
+            ->create();
 
         $readRepo = Mockery::mock(ItemReadRepository::class);
         $readRepo->shouldReceive('getItemById')
@@ -45,7 +47,7 @@ class ItemControllerTest extends TestCase
                 'price' => $item->price,
                 'icon' => $item->icon,
                 'description' => $item->description,
-                'found_in_id' => $item->found_in_id,
+                'loot_areas_ids' => $item->loot_areas_ids,
                 'rarity_id' => $item->rarity_id,
                 'item_type_id' => $item->item_type_id,
                 'can_be_deconstructed' => $item->can_be_deconstructed,
@@ -57,7 +59,7 @@ class ItemControllerTest extends TestCase
     {
         $rarity = Rarity::factory()->create();
         $itemType = ItemType::factory()->create();
-        $foundIn = FoundIn::factory()->create();
+        $lootArea = LootArea::factory()->create();
 
         $writeRepo = Mockery::mock(ItemWriteRepository::class);
         $writeRepo->shouldReceive('save')
@@ -71,7 +73,7 @@ class ItemControllerTest extends TestCase
             'price' => 200,
             'icon' => null,
             'description' => 'lorem ipsum',
-            'found_in_id' => $foundIn->id,
+            'loot_areas_ids' => [$lootArea->id],
             'rarity_id' => $rarity->id,
             'item_type_id' => $itemType->id,
             'can_be_deconstructed' => true,
@@ -86,7 +88,7 @@ class ItemControllerTest extends TestCase
         $item = Item::factory()->make(['id' => 1]);
         $rarity = Rarity::factory()->create();
         $itemType = ItemType::factory()->create();
-        $foundIn = FoundIn::factory()->create();
+        $lootArea = LootArea::factory()->create();
 
 
         $readRepo = Mockery::mock(ItemReadRepository::class);
@@ -104,7 +106,7 @@ class ItemControllerTest extends TestCase
                 'price' => 200,
                 'icon' => null,
                 'description' => 'lorem ipsum',
-                'found_in_id' => $foundIn->id,
+                'loot_areas_ids' => $lootArea->id,
                 'rarity_id' => $rarity->id,
                 'item_type_id' => $itemType->id,
                 'can_be_deconstructed' => true,]

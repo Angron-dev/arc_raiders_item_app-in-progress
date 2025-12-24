@@ -6,12 +6,12 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-final class CreateItemCanBeFoundRequest extends FormRequest
+final class CreateLootAreaRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'found_in_name' => ['string', 'unique:item_can_be_found_in,found_in_name', 'required'],
+            'loot_area_name' => ['string', 'unique:loot_area,loot_area_name', 'required'],
         ];
     }
 }

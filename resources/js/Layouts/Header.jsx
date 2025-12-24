@@ -75,10 +75,11 @@ export default function Header({ header = undefined, children }) {
                                                     Rarity List
                                                 </Dropdown.Link>
                                                 <Dropdown.Link
-                                                    href={route('found_in.list')}
+                                                    href={route('loot_area.list')}
                                                 >
-                                                    Found In List
-                                                </Dropdown.Link>                                    <Dropdown.Link
+                                                    Loot Areas List
+                                                </Dropdown.Link>
+                                                <Dropdown.Link
                                                     href={route('item_type.list')}
                                                 >
                                                     Item Type List
