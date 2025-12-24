@@ -36,7 +36,7 @@ class LootAreaController extends Controller
         $newItemLootArea = new LootArea($itemLootArea);
         $this->lootAreaWriteRepository->save($newItemLootArea);
 
-        return redirect()->route('found_in.list');
+        return redirect()->route('loot_area.list');
     }
     public function update(int $id, UpdateLootAreaRequest $updateLootAreaRequest): JsonResponse
     {
@@ -52,6 +52,6 @@ class LootAreaController extends Controller
         $itemLootArea = $this->lootAreaReadRepository->getLootAreaById($id);
         $this->lootAreaWriteRepository->delete($itemLootArea);
 
-        return redirect()->route('found_in.list');
+        return redirect()->route('loot_area.list');
     }
 }

@@ -11,7 +11,7 @@ final class CreateLootAreaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'loot_area_name' => ['string', 'unique:loot_area,loot_area_name', 'required'],
+            'loot_area_name' => ['string', 'unique:loot_areas,loot_area_name', 'required'],
         ];
     }
 }

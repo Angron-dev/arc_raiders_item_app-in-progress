@@ -25,9 +25,11 @@ class ItemControllerTest extends TestCase
     #[Test]
     public function test_return_single_item_by_id(): void
     {
-        Item::factory()
+        $item = Item::factory()
             ->has(LootArea::factory()->count(2))
             ->create();
+
+        $item->load('lootAreas');
 
         $readRepo = Mockery::mock(ItemReadRepository::class);
         $readRepo->shouldReceive('getItemById')
@@ -47,11 +49,11 @@ class ItemControllerTest extends TestCase
                 'price' => $item->price,
                 'icon' => $item->icon,
                 'description' => $item->description,
-                'loot_areas_ids' => $item->loot_areas_ids,
                 'rarity_id' => $item->rarity_id,
                 'item_type_id' => $item->item_type_id,
                 'can_be_deconstructed' => $item->can_be_deconstructed,
-            ]);
+            ])
+            ->assertJsonCount(2, 'loot_areas');
     }
 
     #[Test]
