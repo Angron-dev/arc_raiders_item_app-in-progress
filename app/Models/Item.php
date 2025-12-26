@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -47,8 +49,12 @@ class Item extends Model
 
     public function deconstructComponents()
     {
-        return $this->belongsToMany(Item::class, 'item_deconstruct_components', 'item_id', 'component_item_id')
-            ->withPivot('amount');
+        return $this->belongsToMany(
+            Item::class,
+            'item_deconstruction_components',
+            'deconstruct_item_id',
+            'result_item_id'
+        )->withPivot('amount');
     }
 
     public function rarity()

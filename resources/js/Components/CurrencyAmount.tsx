@@ -12,7 +12,7 @@ export default function CurrencyAmount({
    className = "",
 }: CurrencyAmountProps) {
     return (
-        <span className={`d-flex align-items-center justify-content-center ${className}`}>
+        <span className={`d-flex align-items-center ${className}`}>
             {value}
             <img
                 src={symbolSrc}

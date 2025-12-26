@@ -16,4 +16,8 @@ export default interface Item {
     loot_areas?: LootArea[];
     item_type?: ItemType;
     rarity?: ItemRarity;
+
+    pivot?: {
+        amount: number;
+    };
 }

@@ -30,7 +30,7 @@ class ItemController extends Controller
         $filters = $request->input();
         return response()->json($this->itemReadRepository->getPaginatedItems(filter: $filters));
     }
-    public function getItemById(int $id): JsonResponse
+    public function show(int $id): JsonResponse
     {
         return response()->json($this->itemReadRepository->getItemById($id));
     }
@@ -77,4 +77,28 @@ class ItemController extends Controller
         ]);
     }
 
+    public function getDeconstructComponents(int $id): JsonResponse
+    {
+        $item = $this->itemReadRepository->getItemById($id);
+        $components = $item->deconstructComponents()->with(['rarity', 'lootAreas'])->get();
+        return response()->json($components);
+    }
+
+    public function manageDeconstructComponents(Request $request, int $id): JsonResponse
+    {
+        $item = Item::findOrFail($id);
+
+        $components = collect($request->input('components', []))
+            ->mapWithKeys(fn ($c) => [
+                $c['result_item_id'] => ['amount' => $c['amount']]
+            ])
+            ->toArray();
+
+        $item->deconstructComponents()->sync($components);
+
+        return response()->json([
+            'message' => 'Deconstruct components synced',
+            'components' => $components
+        ]);
+    }
 }
